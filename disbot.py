@@ -17,7 +17,6 @@ class DiscordAnchor(discord.Client):
         print(f"Logged in as {self.user}")
     
     async def on_message(self, message):
-        
         if (
             message.author.bot
             or str(message.channel.id) != self.channel
@@ -45,10 +44,11 @@ class DiscordAnchor(discord.Client):
 
         messages = content.split("\n")
 
+
         for m in messages:
             msg = {
                 "dest": "irc",
-                "author": message.author,
+                "author": f"{message.author.nick}#" if message.author.nick else message.author,
                 "content": m
             }
 

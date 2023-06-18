@@ -130,9 +130,16 @@ def handle_msg():
     if request.args.get("author") == bot.bot['nick']:
         return
 
-    author, _drop= request.args.get("author").split('#', 1)
+    if request.args.get("dest") == "irc":
+        author, _drop= request.args.get("author").split('#', 1)
+        bot.send_msg(f"""{author}: {request.args.get("content")}""")
     
-    bot.send_msg(f"""{author}: {request.args.get("content")}""")
+    elif request.args.get("dest") == "reply":
+        author, _drop= request.args.get("author").split('#', 1)
+        bot.send_msg(f"""{author} {request.args.get("content")}""")
+    
+    else:
+        return "ERROR", 406
 
     return "OK", 200
 

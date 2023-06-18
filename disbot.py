@@ -17,9 +17,10 @@ class DiscordAnchor(discord.Client):
         print(f"Logged in as {self.user}")
     
     async def on_message(self, message):
+        
         if (
             message.author.bot
-            or message.channel.id != self.channel
+            or str(message.channel.id) != self.channel
         ):
             return
 

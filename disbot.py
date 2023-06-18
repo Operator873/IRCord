@@ -34,16 +34,14 @@ class DiscordAnchor(discord.Client):
                 orig_author, _drop = orig_author.split("#", 1)
 
             reply = {
-                "dest": "irc",
+                "dest": "reply",
                 "author": "replying to-->#",
                 "content": f"{orig_author}: {original_message.content}"
             }
 
             requests.get("http://127.0.0.1:54321/irc", params=reply)
 
-
         messages = content.split("\n")
-
 
         for m in messages:
             msg = {

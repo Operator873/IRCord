@@ -41,12 +41,15 @@ class IRCAnchor(SASL, SSL, DisconnectOnError, PingServer, Ghost, Bot):
         if not target:
             target = self.channel
         
-        nick, msg = message.split(":", 1)
+        try:        
+            nick, msg = message.split(":", 1)
         
-        if nick not in self.users:
-            self.users[nick] = f"{random.randint(2, 15)}{nick}"
-        
-        formatted_msg = f"{self.no_ping(self.users[nick])}:{msg}"
+            if nick not in self.users:
+                self.users[nick] = f"{random.randint(2, 15)}{nick}"
+            
+            formatted_msg = f"{self.no_ping(self.users[nick])}:{msg}"
+        except ValueError:
+            formatted_msg = message
         
         try:
             self.connection.privmsg(target, formatted_msg)

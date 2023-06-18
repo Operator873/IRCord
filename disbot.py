@@ -29,6 +29,7 @@ class DiscordAnchor(discord.Client):
         if str(message.type) == "MessageType.reply":
             original_message = await message.channel.fetch_message(message.reference.message_id)
             orig_author = str(original_message.author)
+            print(orig_author)
             orig_author, _drop = orig_author.split("#", 1)
 
             reply = {
@@ -37,7 +38,7 @@ class DiscordAnchor(discord.Client):
                 "content": f"{orig_author}: {original_message.content}"
             }
 
-            requests.get("http://127.0.0.1:54321/irc", params=reply)
+            # requests.get("http://127.0.0.1:54321/irc", params=reply)
 
 
         messages = content.split("\n")
@@ -49,7 +50,7 @@ class DiscordAnchor(discord.Client):
                 "content": m
             }
 
-            requests.get("http://127.0.0.1:54321/irc", params=msg)
+            # requests.get("http://127.0.0.1:54321/irc", params=msg)
 
 if __name__ == "__main__":
     path = os.path.dirname(os.path.realpath(__file__))

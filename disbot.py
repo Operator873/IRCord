@@ -19,7 +19,7 @@ class DiscordAnchor(discord.Client):
     async def on_message(self, message):
         if (
             message.author.bot
-            or message.channel != self.channel
+            or message.channel.id != self.channel
         ):
             return
 

@@ -1,0 +1,21 @@
+{
+    "ircbot": {
+        "nick": "IRC-Discord873",
+        "acnt": "yourIRCAccountName",
+        "pass": "yourIRCPassword",
+        "name": "yourRealNameParam"
+    },
+
+    "disbot": {
+        "token": "123abc",
+        "webhook": "link"
+    },
+
+    "server": {
+        "url": "irc.libera.chat",
+        "port": 6697
+    },
+
+    "irc_channel": "##IRCChannel",
+    "dis_channel": "DiscordChannelID"
+}

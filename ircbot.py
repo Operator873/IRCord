@@ -48,7 +48,15 @@ class IRCAnchor(SASL, SSL, DisconnectOnError, PingServer, Ghost, Bot):
 
         # Check the local dict for the user. If not exist, make a pretty random color
         if nick not in self.users:
-            self.users[nick] = f"{random.randint(2, 15)}{nick}"
+            # Set an int which translates to color on IRC
+            color = random.randint(2, 15)
+            
+            # Nobody likes yellow, pick again until we have something else
+            while color == 8:
+                color = random.randint(2, 15)
+            
+            # Save the pretty color in the temp dict
+            self.users[nick] = f"{color}{nick}"
 
         # Format the message so it doesn't ping AND is pretty colored
         formatted_msg = f"{self.no_ping(self.users[nick])}:{msg}"

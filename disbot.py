@@ -28,12 +28,30 @@ class DiscordAnchor(discord.Client):
 
         content = message.content
 
-        if str(message.type) == "MessageType.reply":
-            # If the message is a reply, send the original message to IRC too
-            # Fetch the original message by ID
-            original_message = await message.channel.fetch_message(
-                message.reference.message_id
-            )
+        # If there are @mentions, replace the userid with the nick or name
+        if message.mentions:
+            content = self.fix_mention(message.mentions, content)
+
+        if (
+            message.reference is not None
+            and isinstance(message.reference.resolved, discord.Message)
+        ):
+            original_message = message.reference.resolved
+
+            # Check for mentions and attempt to correct
+            if original_message.mentions:
+                original_content = original_message.content
+                original_content = original_content.replace("<", "").replace(">", "")
+                # The referenced message doesn't come with clean nick params
+                # so we have to look it up manually. For this, we need the guild id
+                guild = self.get_guild(message.guild.id)
+                for mention in original_message.mentions:
+                    # Actively find the person mentioned in the original message and fix their nick
+                    person = await guild.fetch_member(mention.id)
+                    original_content = original_content.replace(
+                        str(mention.id),
+                        person.nick if person.nick else person.name
+                    )
 
             # Build a API payload with the original message to set context for the reply
             reply = {
@@ -62,6 +80,15 @@ class DiscordAnchor(discord.Client):
 
             # If you changed ircbot's Flask app, you'll need to change this too
             requests.get("http://127.0.0.1:54321/irc", params=msg)
+    
+    def fix_mention(self, mentions, content):
+        for mention in mentions:
+            if mention.nick:
+                content = content.replace(str(mention.id), mention.nick)
+            else:
+                content = content.replace(str(mention.id), mention.name)
+        
+        return content
 
 
 if __name__ == "__main__":

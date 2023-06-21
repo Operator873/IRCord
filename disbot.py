@@ -82,6 +82,7 @@ class DiscordAnchor(discord.Client):
             requests.get("http://127.0.0.1:54321/irc", params=msg)
     
     def fix_mention(self, mentions, content):
+        content = content.replace("<", "").replace(">", "")
         for mention in mentions:
             if mention.nick:
                 content = content.replace(str(mention.id), mention.nick)

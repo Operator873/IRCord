@@ -40,6 +40,21 @@ class IRCAnchor(SASL, SSL, DisconnectOnError, PingServer, Ghost, Bot):
     def no_ping(self, name):
         # Add a zero width space to Discord nicks to prevent pings on IRC
         return f"{name[:4]}\u200B{name[4:]}"
+    
+    def on_quit(self, conn, event):
+        quit_message = event.arguements['0']
+
+        # Build the webhook payload
+        msg = {
+            "avatar_url": "https://873gear.com/Stew_Bridge.png",
+            "content": f"*{event.source.nick} has {event.type} {quit_message}*",
+        }
+
+        # Send the payload and casually check for okness
+        result = requests.post(self.webhook, json=msg)
+        if not result.ok:
+            print(result.json())
+
 
     def on_join(self, conn, event):
         # If the bot doesn't have its nick or if the message is from the bot

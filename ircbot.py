@@ -212,7 +212,7 @@ def handle_msg():
     elif request.args.get("dest") == "reply":
         # Replies substitue the "author" for a reply-to--> instead
         author, _drop = request.args.get("author").split("#", 1)
-        bot.send_msg(f"""{author} {request.args.get("content")}""")
+        bot.send_msg(f"""{author}: {request.args.get("content")}""")
 
     else:
         # Anything else, send back Not Acceptable because why not

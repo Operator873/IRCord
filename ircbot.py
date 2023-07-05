@@ -41,6 +41,34 @@ class IRCAnchor(SASL, SSL, DisconnectOnError, PingServer, Ghost, Bot):
         # Add a zero width space to Discord nicks to prevent pings on IRC
         return f"{name[:4]}\u200B{name[4:]}"
 
+    def on_join(self, conn, event):
+        # If the bot doesn't have its nick or if the message is from the bot
+        # Ignore it
+        if not self.has_primary_nick() or event.source.nick == self.bot["nick"]:
+            return
+        else:
+            self.alfred_handle(event)
+    
+    def on_part(self, conn, event):
+        # If the bot doesn't have its nick or if the message is from the bot
+        # Ignore it
+        if not self.has_primary_nick() or event.source.nick == self.bot["nick"]:
+            return
+        else:
+            self.alfred_handle(event)
+
+    def alfred_handle(self, event):
+        # Build the webhook payload
+        msg = {
+            "avatar_url": "https://873gear.com/Stew_Bridge.png",
+            "content": f"*{event.source.nick} has {event.type}ed {event.target}*",
+        }
+
+        # Send the payload and casually check for okness
+        result = requests.post(self.webhook, json=msg)
+        if not result.ok:
+            print(result.json())
+
     def send_msg(self, message, target=None):
         # If a target is explicit, use it, else default config channel
         target = target if target else self.channel

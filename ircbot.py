@@ -42,7 +42,7 @@ class IRCAnchor(SASL, SSL, DisconnectOnError, PingServer, Ghost, Bot):
         return f"{name[:4]}\u200B{name[4:]}"
     
     def on_quit(self, conn, event):
-        quit_message = event.arguements['0']
+        quit_message = event.arguments['0']
 
         # Build the webhook payload
         msg = {
